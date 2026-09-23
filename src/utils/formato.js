@@ -49,6 +49,38 @@ export function esOfertaDestacada(precio, oferta) {
     return calcularAhorro(precio, oferta) >= DESCUENTO_DESTACADO;
 }
 
+/* Valor con el que el filtro de categorías muestra el catálogo entero.
+   Se exporta para que el componente del filtro y App usen la misma
+   constante y no dos cadenas sueltas que puedan dejar de coincidir. */
+export const TODAS_LAS_CATEGORIAS = "Todas";
+
+/**
+ * Devuelve las categorías presentes en el catálogo, sin repetir y en
+ * orden alfabético. Se calculan a partir de los datos en lugar de
+ * escribirlas a mano: si mañana se agrega un producto de un género
+ * nuevo, su categoría aparece sola.
+ * @param {Array} listado - Los productos del catálogo.
+ * @returns {string[]} Las categorías, con "Todas" al principio.
+ */
+export function obtenerCategorias(listado) {
+    const generos = [...new Set(listado.map((producto) => producto.genero))];
+    return [TODAS_LAS_CATEGORIAS, ...generos.sort()];
+}
+
+/**
+ * Filtra un listado de productos por categoría.
+ * @param {Array} listado - Los productos del catálogo.
+ * @param {string} categoria - La categoría elegida.
+ * @returns {Array} Los productos de esa categoría, o todos.
+ */
+export function filtrarPorCategoria(listado, categoria) {
+    if (categoria === TODAS_LAS_CATEGORIAS) {
+        return listado;
+    }
+
+    return listado.filter((producto) => producto.genero === categoria);
+}
+
 /**
  * Filtra un listado de productos por coincidencia de texto en el nombre.
  * Ignora mayúsculas y espacios sobrantes. Con el texto vacío devuelve

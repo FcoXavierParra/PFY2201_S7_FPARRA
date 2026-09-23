@@ -221,19 +221,43 @@ main section[id] {
    contenedor flex, un elemento con min-width:auto no puede encogerse
    por debajo de su ancho natural, y el .form-control de Bootstrap
    lleva width:100%. Asi el campo cede espacio en pantallas estrechas
-   en vez de empujar al contador del carrito fuera de la barra. */
+   en vez de empujar al contador del carrito fuera de la barra.
+
+   El maximo evita el problema contrario: en pantallas muy anchas el
+   campo se estiraba hasta separar los enlaces del contador. */
 .navbar form,
 .navbar .form-control {
     min-width: 0;
 }
 
-/* Por debajo de 576 px el buscador pasa a ocupar su propia fila: si se
-   queda en linea con la marca y el contador, los tres se estrujan. */
-@media (max-width: 575.98px) {
+@media (min-width: 992px) {
     .navbar form {
-        order: 3;
-        flex-basis: 100%;
+        max-width: 22rem;
     }
+}
+
+/* Con el menu colapsado los elementos se apilan, asi que el buscador y
+   el boton del carrito necesitan aire entre ellos y entre los enlaces. */
+@media (max-width: 991.98px) {
+    .navbar-collapse form {
+        margin: 0.75rem 0;
+    }
+
+    .navbar-collapse .btn {
+        display: block;
+        width: fit-content;
+    }
+}
+
+/* El icono del boton hamburguesa de Bootstrap viene en un SVG con el
+   color escrito dentro, asi que no sigue a --bs-primary. Se sustituye
+   por el mismo trazo en el tono de la marca. */
+.navbar-toggler {
+    border-color: var(--np-borde);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%238b6cff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
 /* Quien navegue con teclado debe ver donde esta parado */

@@ -16,9 +16,16 @@ Hasta la Semana 6 el sitio era HTML, CSS y JavaScript con manipulación directa 
 (`createElement`, `appendChild`, delegación de eventos). Esta semana **se reescribe la
 lógica en React**: el estado describe qué debe verse y React se encarga de pintarlo.
 
-Se conservan el caso, los nueve productos, las portadas SVG y la identidad visual.
-Se retiran el carrusel, el filtro por categorías, el modal de compra y la carga por
-`fetch`, que no forman parte de lo que evalúa esta actividad.
+Se conservan el caso, los nueve productos, las portadas SVG, la identidad visual, la
+barra de navegación, la sección de inicio, el filtro por categorías y el pie de página.
+Se retiran el carrusel de destacados, el formulario de contacto, el modal de compra y la
+carga por `fetch`: no forman parte de lo que evalúa esta actividad y habría que
+reimplementarlos a mano, porque **el JavaScript de Bootstrap no convive con React** —
+manipula el DOM por su cuenta y React es quien lo gobierna aquí.
+
+El menú colapsable es el ejemplo de cómo se resuelve eso: se usa el CSS de Bootstrap
+(`.collapse` oculta, `.show` muestra) y React se limita a añadir o quitar la clase
+según su estado. Cero JavaScript del framework.
 
 ## Cómo ejecutarlo
 
@@ -50,18 +57,23 @@ nombre del repositorio porque así se publica en GitHub Pages: ver *Publicación
 | **Eliminar del carrito** | evento `onClick` | Quitar una unidad, eliminar la línea completa o vaciar el carrito |
 | **Contador y total** | `.reduce()` sobre el estado | El contador cuenta unidades; el total suma los precios de oferta y muestra el ahorro |
 | **Buscador en vivo** | evento `onChange` | Filtra el catálogo mientras se escribe, sin pulsar ningún botón |
-| **Renderizado condicional** | operador ternario | Carrito vacío, búsqueda sin resultados y etiqueta de oferta destacada |
+| **Filtro por categorías** | evento `onClick` | Las categorías se calculan desde los datos, no se escriben a mano. Se combina con el buscador |
+| **Menú colapsable** | evento `onClick` + estado local | La hamburguesa abre y cierra el menú en móvil, y se cierra sola al elegir una sección |
+| **Renderizado condicional** | operador ternario y `&&` | Cinco estados distintos, ver abajo |
 
 ### Renderizado condicional
 
-Tres estados de la aplicación cambian lo que se ve en pantalla:
+Cinco estados de la aplicación cambian lo que se ve en pantalla:
 
 1. **Carrito vacío** → en lugar de una lista y un total en cero, un mensaje que indica
    qué hacer.
-2. **Búsqueda sin coincidencias** → en lugar de una rejilla vacía, un aviso que cita lo
-   que se buscó.
+2. **Filtros sin coincidencias** → en lugar de una rejilla vacía, un aviso que explica
+   por cuál de los dos filtros se quedó sin resultados: el texto, la categoría o ambos.
 3. **Oferta destacada** → la etiqueta *"¡Mejor precio!"* aparece solo en los productos
    cuyo descuento llega al 30 %; el resto muestra el porcentaje de ahorro en texto.
+4. **Categoría activa** → su botón se pinta con el color de marca y los demás quedan en
+   contorno.
+5. **Menú desplegado** → la clase `show` se añade solo cuando el estado lo pide.
 
 ## Estructura
 
@@ -76,34 +88,41 @@ Tres estados de la aplicación cambian lo que se ve en pantalla:
     ├── index.css               Capa de estilo propio sobre Bootstrap 5
     ├── data/productos.js       Los nueve productos, con precio y oferta
     ├── utils/formato.js        Funciones reutilizables de formato y filtrado
-    ├── assets/img/             Portadas SVG y logotipo
+    ├── assets/img/              Portadas SVG y logotipo
     └── components/
-        ├── Encabezado.jsx      Barra superior y contador del carrito
-        ├── Buscador.jsx        Campo de búsqueda (onChange)
-        ├── ListaProductos.jsx  Rejilla del catálogo
-        ├── TarjetaProducto.jsx Ficha de un producto
-        ├── Carrito.jsx         Sección del carrito
-        ├── LineaCarrito.jsx    Una línea del carrito
-        ├── TotalCarrito.jsx    Unidades, ahorro y total
-        └── PieDePagina.jsx     Contacto y redes
+        ├── Encabezado.jsx       Barra de navegación, buscador y contador
+        ├── Buscador.jsx         Campo de búsqueda (onChange)
+        ├── Inicio.jsx           Presentación de la tienda
+        ├── FiltroCategorias.jsx Botones de categoría (onClick)
+        ├── ListaProductos.jsx   Rejilla del catálogo
+        ├── TarjetaProducto.jsx  Ficha de un producto
+        ├── Carrito.jsx          Sección del carrito
+        ├── LineaCarrito.jsx     Una línea del carrito
+        ├── TotalCarrito.jsx     Unidades, ahorro y total
+        └── PieDePagina.jsx      Contacto y redes
 ```
 
 ### Dónde vive el estado
 
-Todo el estado de la aplicación está en `App.jsx` y baja por props:
+El estado que comparten varios componentes está en `App.jsx` y baja por props:
 
 ```js
-const [carrito, setCarrito]   = useState([]);   // { id, cantidad }
-const [busqueda, setBusqueda] = useState("");   // texto del buscador
+const [carrito, setCarrito]     = useState([]);      // { id, cantidad }
+const [busqueda, setBusqueda]   = useState("");      // texto del buscador
+const [categoria, setCategoria] = useState("Todas"); // filtro de categoría
 ```
 
 Está ahí y no repartido porque el contador lo pinta el encabezado, las líneas las pinta
 el carrito y quien agrega productos es una tarjeta del catálogo: tres ramas distintas
 del árbol leyendo el mismo dato, así que el dato vive en el ancestro común.
 
+Lo contrario también vale: **el menú desplegable guarda su estado dentro de
+`Encabezado`**, porque no le importa a ningún otro componente. La regla es que el estado
+sube solo hasta donde hace falta compartirlo.
+
 El listado filtrado y las líneas del carrito **no son estado**: se derivan en cada
-renderizado a partir de `carrito`, `busqueda` y el catálogo. Guardarlos en su propio
-`useState` obligaría a mantenerlos sincronizados a mano.
+renderizado a partir de `carrito`, `busqueda`, `categoria` y el catálogo. Guardarlos en
+su propio `useState` obligaría a mantenerlos sincronizados a mano.
 
 ## Publicación
 
