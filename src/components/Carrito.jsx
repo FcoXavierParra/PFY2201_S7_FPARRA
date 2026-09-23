@@ -23,42 +23,40 @@ function Carrito({ lineas, alQuitar, alEliminar, alVaciar }) {
     const vacio = lineas.length === 0;
 
     return (
-        <section id="carrito" className="py-5">
-            <div className="container">
-                <h2>Tu carrito</h2>
+        <section id="carrito" className="carrito-fijo">
+            <h2>Tu carrito</h2>
 
-                <div className="card mt-3">
-                    <div className="card-body">
-                        {vacio ? (
-                            <p className="mb-0 text-body-secondary" role="status">
-                                Tu carrito está vacío. Agrega un juego del
-                                catálogo para empezar.
-                            </p>
-                        ) : (
-                            <>
-                                <ul className="list-group list-group-flush">
-                                    {lineas.map((linea) => (
-                                        <LineaCarrito
-                                            key={linea.producto.id}
-                                            linea={linea}
-                                            alQuitar={alQuitar}
-                                            alEliminar={alEliminar}
-                                        />
-                                    ))}
-                                </ul>
+            <div className="card mt-3">
+                <div className="card-body">
+                    {vacio ? (
+                        <p className="mb-0 text-body-secondary" role="status">
+                            Tu carrito está vacío. Agrega un juego del catálogo
+                            para empezar.
+                        </p>
+                    ) : (
+                        <>
+                            <ul className="list-group list-group-flush">
+                                {lineas.map((linea) => (
+                                    <LineaCarrito
+                                        key={linea.producto.id}
+                                        linea={linea}
+                                        alQuitar={alQuitar}
+                                        alEliminar={alEliminar}
+                                    />
+                                ))}
+                            </ul>
 
-                                <TotalCarrito lineas={lineas} />
+                            <TotalCarrito lineas={lineas} />
 
-                                <button
-                                    type="button"
-                                    className="btn btn-outline-secondary btn-sm mt-3"
-                                    onClick={alVaciar}
-                                >
-                                    Vaciar carrito
-                                </button>
-                            </>
-                        )}
-                    </div>
+                            <button
+                                type="button"
+                                className="btn btn-outline-secondary btn-sm mt-3"
+                                onClick={alVaciar}
+                            >
+                                Vaciar carrito
+                            </button>
+                        </>
+                    )}
                 </div>
             </div>
         </section>

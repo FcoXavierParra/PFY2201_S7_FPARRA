@@ -112,19 +112,30 @@ function App() {
                 <Buscador busqueda={busqueda} alBuscar={setBusqueda} />
             </Encabezado>
 
-            <main>
-                <ListaProductos
-                    productos={productosVisibles}
-                    busqueda={busqueda}
-                    alAgregar={agregarAlCarrito}
-                />
+            {/* El catálogo y el carrito van lado a lado desde 992 px, con el
+                carrito fijo al hacer scroll. Puestos uno debajo del otro, el
+                carrito quedaba a nueve tarjetas de distancia y la tienda
+                parecía solo un catálogo. Por debajo de 992 px se apilan, y
+                para llegar al carrito está el enlace del encabezado. */}
+            <main className="container py-4">
+                <div className="row g-4">
+                    <div className="col-lg-8">
+                        <ListaProductos
+                            productos={productosVisibles}
+                            busqueda={busqueda}
+                            alAgregar={agregarAlCarrito}
+                        />
+                    </div>
 
-                <Carrito
-                    lineas={lineasCarrito}
-                    alQuitar={quitarUnaUnidad}
-                    alEliminar={eliminarDelCarrito}
-                    alVaciar={vaciarCarrito}
-                />
+                    <aside className="col-lg-4">
+                        <Carrito
+                            lineas={lineasCarrito}
+                            alQuitar={quitarUnaUnidad}
+                            alEliminar={eliminarDelCarrito}
+                            alVaciar={vaciarCarrito}
+                        />
+                    </aside>
+                </div>
             </main>
 
             <PieDePagina />

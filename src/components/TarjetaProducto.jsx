@@ -25,8 +25,10 @@ function TarjetaProducto({ producto, alAgregar }) {
     const ahorro = calcularAhorro(producto.precio, producto.oferta);
     const destacada = esOfertaDestacada(producto.precio, producto.oferta);
 
+    /* El catálogo vive en una columna de 8/12, así que las tarjetas pasan a
+       tres por fila solo en pantallas muy anchas */
     return (
-        <article className="col-12 col-sm-6 col-lg-4">
+        <article className="col-12 col-sm-6 col-xxl-4">
             <div className="card h-100">
                 {/* 1. IMAGEN del producto */}
                 <img

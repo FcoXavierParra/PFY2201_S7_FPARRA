@@ -192,6 +192,31 @@ main section[id] {
     scroll-margin-top: clamp(4rem, 8vw, 5.5rem);
 }
 
+
+/* ============================================================
+   4. EL CARRITO COMO COLUMNA LATERAL FIJA
+
+   Desde 992 px el carrito acompana al catalogo en una columna
+   propia y se queda fijo al hacer scroll, para que el contador y el
+   total esten siempre a la vista mientras se agregan productos.
+
+   El top coincide con el alto de la barra de navegacion, que es
+   sticky: sin ese hueco el carrito se le meteria debajo.
+
+   max-height y overflow son la guarda para un carrito largo: con
+   nueve productos distintos la tarjeta supera el alto de la pantalla,
+   y sin esto el total quedaria fuera de vista, que es justo lo que
+   esta disposicion intenta evitar.
+   ============================================================ */
+@media (min-width: 992px) {
+    .carrito-fijo {
+        position: sticky;
+        top: clamp(4.5rem, 8vw, 5.5rem);
+        max-height: calc(100vh - clamp(6rem, 10vw, 7.5rem));
+        overflow-y: auto;
+    }
+}
+
 /* El buscador de la barra: min-width:0 es una guarda defensiva. En un
    contenedor flex, un elemento con min-width:auto no puede encogerse
    por debajo de su ancho natural, y el .form-control de Bootstrap
